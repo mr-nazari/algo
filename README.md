@@ -10,4 +10,6 @@ Google C++ Style Guide https://google.github.io/styleguide/cppguide.html
 - Check `definitions.cpp` file it contains aliases and some other stuffs.
 - I will try to add most known (or even unknown) algorithms by 2025.
 
+*The most important thing is readability at same optimality. Over time, I will try to make the codes better and cleaner.*
+
 **Enjoy ✨**
