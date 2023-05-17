@@ -4,3 +4,11 @@ using i64 = long long;
 using u64 = unsigned long long;
 
 constexpr double PI = std::numbers::pi;
+
+template <typename T> bool ckmin(T& a, const T& b) {
+   return a > b ? a = b, 1 : 0;
+}
+
+template <typename T> bool ckmax(T& a, const T& b) {
+   return a < b ? a = b, 1 : 0;
+}
