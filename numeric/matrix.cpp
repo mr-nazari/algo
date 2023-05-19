@@ -1,14 +1,15 @@
+template <typename T>
 struct Matrix {
-   vector<vector<int>> data;
+   vector<vector<T>> data;
    int n, m;
 
    Matrix() {}
 
-   Matrix(int _n, int _m) : n(_n), m(_m), data(n, vector<int>(m)) {}
+   Matrix(int _n, int _m) : n(_n), m(_m), data(n, vector<T>(m)) {}
 
-   Matrix(vector<vector<int>> _data) : n(_data.size()), m(_data[0].size()), data(_data) {}
+   Matrix(vector<vector<T>> _data) : n(_data.size()), m(_data[0].size()), data(_data) {}
 
-   vector<int> operator[](int row) {
+   vector<T> operator[](int row) {
       return data[row];
    }
 
@@ -16,7 +17,7 @@ struct Matrix {
       if (n != other.n || m != other.m) {
          return Matrix();
       }
-      vector<vector<int>> ret(n, vector<int>(m));
+      vector<vector<T>> ret(n, vector<T>(m));
       for (int i = 0; i < n; ++i) {
          for (int j = 0; j < m; ++j) {
             ret[i][j] = data[i][j] + other.data[i][j];
@@ -34,7 +35,7 @@ struct Matrix {
       if (n != other.n || m != other.m) {
          return Matrix();
       }
-      vector<vector<int>> ret(n, vector<int>(m));
+      vector<vector<T>> ret(n, vector<T>(m));
       for (int i = 0; i < n; ++i) {
          for (int j = 0; j < m; ++j) {
             ret[i][j] = data[i][j] - other.data[i][j];
@@ -52,7 +53,7 @@ struct Matrix {
       if (m != other.n) {
          return Matrix();
       }
-      vector<vector<int>> ret(n, vector<int>(other.m));
+      vector<vector<T>> ret(n, vector<T>(other.m));
       for (int i = 0; i < n; ++i) {
          for (int j = 0; j < other.m; ++j) {
             for (int k = 0; k < m; ++k) {
@@ -63,14 +64,15 @@ struct Matrix {
       return Matrix(ret);
    }
 
-   Matrix operator^(int p) {
+   template <typename U>
+   Matrix operator^(U p) {
       if (n != m) {
          return Matrix();
       }
       if (p == 0) {
-         vector<vector<int>> identity(n, vector<int>(n));
+         vector<vector<T>> identity(n, vector<T>(n));
          for (int i = 0; i < n; ++i) {
-            identity[i][i] = 1;
+            identity[i][i] = T(1);
          }
          return Matrix(identity);
       }
@@ -90,3 +92,12 @@ struct Matrix {
       }
    }
 };
+
+template <typename T, typename U>
+T fib(U n) {
+   Matrix<T> base({
+      {T(1), T(1)},
+      {T(1), T(0)}
+   });
+   return (base ^ n)[0][1];
+}
