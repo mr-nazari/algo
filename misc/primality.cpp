@@ -21,11 +21,9 @@ i64 modpow(i64 base, i64 exp, i64 mod) {
   base %= mod;
   while (exp > 0) {
     if (exp & 1) {
-      res *= base;
-      res %= mod;
+      res = (u128) res * base % mod;
     }
-    base *= base;
-    base %= mod;
+    base = (u128) base * base % mod;
     exp >>= 1;
   }
   return res;
