@@ -2,6 +2,7 @@
 
 using i64 = long long;
 using u64 = unsigned long long;
+using u128 = __uint128_t;
 
 constexpr double PI = std::numbers::pi;
 
