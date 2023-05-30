@@ -4,7 +4,7 @@ Do you want to code faster and work only on the main logic of your program? This
 
 ## Notes
 - Check `definitions.cpp` file it contains aliases and some other stuffs 📖
-- I will try to add most known (or even unknown) algorithms by 2025 📅
+- I will try to add most known algorithms by 2025 📅
 
 ## Goal/Plan
 Making namespace for each bold topics like graph-theory, number-theory... which includes almost all the algorithms and functionalities        
