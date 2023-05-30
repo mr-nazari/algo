@@ -13,7 +13,7 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
     return out;
   }
   out << '[';
-  for (int i = 0; i < vec.size() - 1; i++) {
+  for (int i = 0; i < (int) vec.size() - 1; ++i) {
     out << vec[i] << ", ";
   }
   return out << vec.back() << ']';
@@ -31,7 +31,7 @@ std::ostream& operator<<(std::ostream& out, const std::deque<T>& deq) {
     return out;
   }
   out << '[';
-  for (int i = 0; i < deq.size() - 1; i++) {
+  for (int i = 0; i < (int) deq.size() - 1; ++i) {
     out << deq[i] << ", ";
   }
   return out << deq.back() << ']';
@@ -40,7 +40,7 @@ std::ostream& operator<<(std::ostream& out, const std::deque<T>& deq) {
 template <typename T1, typename T2>
 std::ostream& operator<<(std::ostream& out, const std::unordered_map<T1, T2>& map) {
   out << '{';
-  for (auto it = map.begin(); it != map.end(); it++) {
+  for (auto it = map.begin(); it != map.end(); ++it) {
     std::pair<T1, T2> element = *it;
     out << element.first << ": " << element.second;
     if (std::next(it) != map.end()) {
@@ -53,7 +53,7 @@ std::ostream& operator<<(std::ostream& out, const std::unordered_map<T1, T2>& ma
 template <typename T1, typename T2>
 std::ostream& operator<<(std::ostream& out, const std::map<T1, T2>& map) {
   out << '{';
-  for (auto it = map.begin(); it != map.end(); it++) {
+  for (auto it = map.begin(); it != map.end(); ++it) {
     std::pair<T1, T2> element = *it;
     out << element.first << ": " << element.second;
     if (std::next(it) != map.end()) {
@@ -66,7 +66,7 @@ std::ostream& operator<<(std::ostream& out, const std::map<T1, T2>& map) {
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const std::unordered_set<T>& set) {
   out << '{';
-  for (auto it = set.begin(); it != set.end(); it++) {
+  for (auto it = set.begin(); it != set.end(); ++it) {
     T element = *it;
     out << element;
     if (std::next(it) != set.end()) {
@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& out, const std::unordered_set<T>& set) {
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const std::multiset<T>& set) {
   out << '{';
-  for (auto it = set.begin(); it != set.end(); it++) {
+  for (auto it = set.begin(); it != set.end(); ++it) {
     T element = *it;
     out << element;
     if (std::next(it) != set.end()) {
@@ -92,7 +92,7 @@ std::ostream& operator<<(std::ostream& out, const std::multiset<T>& set) {
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const std::unordered_multiset<T>& set) {
   out << '{';
-  for (auto it = set.begin(); it != set.end(); it++) {
+  for (auto it = set.begin(); it != set.end(); ++it) {
     T element = *it;
     out << element;
     if (std::next(it) != set.end()) {
@@ -105,7 +105,7 @@ std::ostream& operator<<(std::ostream& out, const std::unordered_multiset<T>& se
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const std::set<T>& set) {
   out << '{';
-  for (auto it = set.begin(); it != set.end(); it++) {
+  for (auto it = set.begin(); it != set.end(); ++it) {
     T element = *it;
     out << element;
     if (std::next(it) != set.end()) {
@@ -116,24 +116,24 @@ std::ostream& operator<<(std::ostream& out, const std::set<T>& set) {
 }
 
 // Source: https://stackoverflow.com/a/31116392/12128483
-template <typename Type, unsigned N, unsigned Last>
+template <typename T, unsigned N, unsigned Last>
 struct TuplePrinter {
-  static void print(std::ostream& out, const Type& value) {
+  static void print(std::ostream& out, const T& value) {
     out << std::get<N>(value) << ", ";
-    TuplePrinter < Type, N + 1, Last >::print(out, value);
+    TuplePrinter<T, N + 1, Last>::print(out, value);
   }
 };
 
-template <typename Type, unsigned N>
-struct TuplePrinter<Type, N, N> {
-  static void print(std::ostream& out, const Type& value) {
+template <typename T, unsigned N>
+struct TuplePrinter<T, N, N> {
+  static void print(std::ostream& out, const T& value) {
     out << std::get<N>(value);
   }
 };
 
-template <typename... Types>
-std::ostream& operator<<(std::ostream& out, const std::tuple<Types...>& value) {
+template <typename... Ts>
+std::ostream& operator<<(std::ostream& out, const std::tuple<Ts...>& value) {
   out << '(';
-  TuplePrinter<std::tuple<Types...>, 0, sizeof...(Types) - 1>::print(out, value);
+  TuplePrinter<std::tuple<Ts...>, 0, sizeof...(Ts) - 1>::print(out, value);
   return out << ')';
 }
