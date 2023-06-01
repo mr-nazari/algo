@@ -13,7 +13,7 @@ struct Interval {
   }
 
   T length() const {
-    return right - left + 1;
+    return max((T) 0, right - left + 1);
   }
 
   bool is_valid() const {
