@@ -39,4 +39,4 @@ Interval<T> intersect(const Interval<T>& lhs, const Interval<T>& rhs) {
   return Interval(max(lhs.left, rhs.left), min(lhs.right, rhs.right));
 }
 
-using Itv = Interval<i64>;
+using Itv = Interval<int>;
