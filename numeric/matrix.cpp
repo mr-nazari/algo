@@ -4,15 +4,12 @@ struct Matrix {
    int n, m;
 
    Matrix() {}
-
    Matrix(int _n, int _m) : n(_n), m(_m), data(n, vector<T>(m)) {}
-
    Matrix(vector<vector<T>> _data) : n(_data.size()), m(_data[0].size()), data(_data) {}
 
    vector<T> operator[](int row) {
       return data[row];
    }
-
    Matrix operator+(const Matrix& other) {
       if (n != other.n || m != other.m) {
          return Matrix();
@@ -25,12 +22,10 @@ struct Matrix {
       }
       return Matrix(ret);
    }
-
    Matrix operator+=(const Matrix& other) {
       *this = *this + other;
       return *this;
    }
-
    Matrix operator-(const Matrix& other) {
       if (n != other.n || m != other.m) {
          return Matrix();
@@ -43,12 +38,10 @@ struct Matrix {
       }
       return Matrix(ret);
    }
-
    Matrix operator-=(const Matrix& other) {
       *this = *this - other;
       return *this;
    }
-
    Matrix operator*(const Matrix& other) {
       if (m != other.n) {
          return Matrix();
@@ -63,7 +56,6 @@ struct Matrix {
       }
       return Matrix(ret);
    }
-
    template <typename U>
    Matrix operator^(U p) {
       if (n != m) {
