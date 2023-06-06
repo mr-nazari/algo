@@ -7,7 +7,6 @@ struct HashString {
   int len;
 
   HashString() {}
-
   HashString(const string& s, i64 mod = 0) : p_hash(s.size() + 1), len(s.size()) {
     if (mod) {
       M = mod;
