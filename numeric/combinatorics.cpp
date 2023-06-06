@@ -51,3 +51,27 @@ Mint catalan(int x, int y) {
   }
   return C(x + y, y) - C(x + y, y + 1);
 };
+
+Mint liep(int n, int s) {
+  // number of solutions to linear equation
+  // with unit coefficients $x_1 + x_2 + \dots + x_n = s$
+  return C(n + s - 1, s);
+}
+
+Mint biep(int n, int s, int b, int r = 0) {
+  // number of solutions to bounded linear equation
+  // with fixed limit (unit coefficients)
+  // $x_1 + x_2 + \dots + x_n = s \forall 1 \le i\ len : r \le x_i \le b$
+  s -= n * r;
+  if (n < 0 || s < 0) {
+    return Mint(0);
+  }
+  if (n == 0) {
+    return Mint(s == 0);
+  }
+  Mint res = 0;
+  for (int i = 0; i <= n; ++i) {
+    res += (i & 1 ? -1 : 1) * C(n, i) * C((s - i * b) + (n - 1), n - 1);
+  }
+  return res;
+}
