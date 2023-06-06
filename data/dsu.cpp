@@ -1,40 +1,32 @@
-struct DSU {
-   std::vector<int> f, siz;
+struct dsu {
+  vector<int> e;
 
-   DSU() {}
-   DSU(int n) {
-      init(n);
-   }
+  dsu(int n) {
+    e = vector<int>(n, -1);
+  }
 
-   void init(int n) {
-      f.resize(n);
-      std::iota(f.begin(), f.end(), 0);
-      siz.assign(n, 1);
-   }
+  int get(int x) {
+    return e[x] < 0 ? x : e[x] = get(e[x]);
+  }
 
-   int find(int x) {
-      while (x != f[x]) {
-         x = f[x] = f[f[x]];
-      }
-      return x;
-   }
+  bool same_set(int a, int b) {
+    return get(a) == get(b);
+  }
 
-   bool same(int x, int y) {
-      return find(x) == find(y);
-   }
+  int size(int x) {
+    return -e[get(x)];
+  }
 
-   bool merge(int x, int y) {
-      x = find(x);
-      y = find(y);
-      if (x == y) {
-         return false;
-      }
-      siz[x] += siz[y];
-      f[y] = x;
-      return true;
-   }
-
-   int size(int x) {
-      return siz[find(x)];
-   }
+  bool unite(int a, int b) {
+    a = get(a), b = get(b);
+    if (a == b) {
+      return false;
+    }
+    if (size(a) > size(b)) {
+      swap(a, b);
+    }
+    e[b] += e[a];
+    e[a] = b;
+    return true;
+  }
 };
