@@ -9,6 +9,7 @@ void init_fact(int n) {
 }
 
 Mint C(int n, int k) {
+  // Binomial Coefficient
   if (k < 0 || k > n) {
     return 0;
   }
@@ -17,14 +18,17 @@ Mint C(int n, int k) {
 }
 
 Mint P(int n, int k) {
+  // k-Permutaion
   return C(n, k) * fact[k];
 }
 
 Mint Q(int n, int k) {
+  // k-Circular Permutation
   return P(n, k) / k;
 }
 
 Mint S(int n, int k) {
+  // Stirling numbers of the second kind
   if (k < 0 || k > n) {
     return 0;
   }
@@ -38,3 +42,12 @@ Mint S(int n, int k) {
   }
   return res;
 }
+
+Mint catalan(int x, int y) {
+  // NOTE: Formal catalan number C(n)
+  // is equal to catalan(2 * n, n).
+  if (x > y) {
+    return Mint(0);
+  }
+  return C(x + y, y) - C(x + y, y + 1);
+};
