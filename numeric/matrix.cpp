@@ -93,3 +93,15 @@ T fib(U n) {
   });
   return (base ^ n)[0][1];
 }
+template <typename T, typename U>
+pair<T, T> fib(U n) {
+   if (n == 0) {
+      return pair(0, 1);
+   }
+   auto [a, b] = fib<T>(n >> 1);
+   auto [c, d] = pair(a * (2 * b - a), a * a + b * b);
+   if (n & 1) {
+      return pair(d, c + d);
+   }
+   return pair(c, d);
+}
