@@ -1,45 +1,40 @@
-struct Comb {
-   int n;
-   std::vector<Z> _fac;
-   std::vector<Z> _invfac;
-   std::vector<Z> _inv;
+vector<Mint> fact(1, 1);
+vector<Mint> inv_fact(1, 1);
 
-   Comb() : n{0}, _fac{1}, _invfac{1}, _inv{0} {}
-   Comb(int n) : Comb() {
-      init(n);
-   }
+void init_fact(int n) {
+  while ((int) fact.size() < n + 1) {
+    fact.push_back(fact.back() * (int) fact.size());
+    inv_fact.push_back(1 / fact.back());
+  }
+}
 
-   void init(int m) {
-      if (m <= n) return;
-      _fac.resize(m + 1);
-      _invfac.resize(m + 1);
-      _inv.resize(m + 1);
+Mint C(int n, int k) {
+  if (k < 0 || k > n) {
+    return 0;
+  }
+  init_fact(n);
+  return fact[n] * inv_fact[k] * inv_fact[n - k];
+}
 
-      for (int i = n + 1; i <= m; i++) {
-         _fac[i] = _fac[i - 1] * i;
-      }
-      _invfac[m] = _fac[m].inv();
-      for (int i = m; i > n; i--) {
-         _invfac[i - 1] = _invfac[i] * i;
-         _inv[i] = _invfac[i] * _fac[i - 1];
-      }
-      n = m;
-   }
+Mint P(int n, int k) {
+  return C(n, k) * fact[k];
+}
 
-   Z fac(int m) {
-      if (m > n) init(2 * m);
-      return _fac[m];
-   }
-   Z invfac(int m) {
-      if (m > n) init(2 * m);
-      return _invfac[m];
-   }
-   Z inv(int m) {
-      if (m > n) init(2 * m);
-      return _inv[m];
-   }
-   Z binom(int n, int m) {
-      if (n < m || m < 0) return 0;
-      return fac(n) * invfac(m) * invfac(n - m);
-   }
-} comb;
+Mint Q(int n, int k) {
+  return P(n, k) / k;
+}
+
+Mint S(int n, int k) {
+  if (k < 0 || k > n) {
+    return 0;
+  }
+  Mint res = 0;
+  init_fact(k);
+  for (int i = 0; i <= k; ++i) {
+    res += (
+      ((k - i) & 1 ? -1 : 1) * power(Mint(i), n)
+      * inv_fact[k - i] * inv_fact[i]
+    );
+  }
+  return res;
+}
