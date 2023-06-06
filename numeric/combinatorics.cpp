@@ -53,13 +53,13 @@ Mint catalan(int x, int y) {
 };
 
 Mint liep(int n, int s) {
-  // number of solutions to linear equation
+  // Number of solutions to linear equation
   // with unit coefficients $x_1 + x_2 + \dots + x_n = s$
   return C(n + s - 1, s);
 }
 
 Mint biep(int n, int s, int b, int r = 0) {
-  // number of solutions to bounded linear equation
+  // Number of solutions to bounded linear equation
   // with fixed limit (unit coefficients)
   // $x_1 + x_2 + \dots + x_n = s \forall 1 \le i\ len : r \le x_i \le b$
   s -= n * r;
