@@ -43,22 +43,22 @@ Mint S(int n, int k) {
   return res;
 }
 
-Mint catalan(int x, int y) {
+Mint Catalan(int x, int y) {
   // NOTE: Formal catalan number C(n)
-  // is equal to catalan(2 * n, n).
+  // is equal to Catalan(2 * n, n).
   if (x > y) {
     return Mint(0);
   }
   return C(x + y, y) - C(x + y, y + 1);
 };
 
-Mint liep(int n, int s) {
+Mint H(int n, int s) {
   // Number of solutions to linear equation
   // with unit coefficients $x_1 + x_2 + \dots + x_n = s$
   return C(n + s - 1, s);
 }
 
-Mint biep(int n, int s, int b, int r = 0) {
+Mint H(int n, int s, int b, int r = 0) {
   // Number of solutions to bounded linear equation
   // with fixed limit (unit coefficients)
   // $x_1 + x_2 + \dots + x_n = s \forall 1 \le i\ len : r \le x_i \le b$
