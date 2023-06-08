@@ -4,10 +4,12 @@ struct Matrix {
   int n, m;
 
   Matrix() {}
-  Matrix(int _n, int _m) : n(_n), m(_m), data(n, vector<T>(m)) {}
+  Matrix(int _n, int _m) : n(_n), m(_m) {
+    data = vector(n, vector<T>(m));
+  }
   Matrix(vector<vector<T>> _data) : n(_data.size()), m(_data[0].size()), data(_data) {}
 
-  vector<T> operator[](int row) {
+  vector<T>& operator[](int row) {
     return data[row];
   }
   Matrix operator+(const Matrix& other) {
@@ -74,16 +76,31 @@ struct Matrix {
     }
     return (mat * mat) ^ (p / 2);
   }
+};
 
-  void print(string seperator = " ", string endline = "\n") {
-    for (int i = 0; i < n; ++i) {
-      for (int j = 0; j < m; ++j) {
-        cout << data[i][j] << seperator;
-      }
-      cout << endline;
+template <typename U, typename T>
+U& operator<<(U& stream, Matrix<T>& mat) {
+  for (int i = 0; i < mat.n; ++i) {
+    for (int j = 0; j < mat.m; ++j) {
+      stream << mat[i][j] << " ";
+    }
+    if (i + 1 == mat.n) {
+      break;
+    }
+    stream << "\n";
+  }
+  return stream;
+}
+
+template <typename U, typename T>
+U& operator>>(U& stream, Matrix<T>& mat) {
+  for (int i = 0; i < mat.n; ++i) {
+    for (int j = 0; j < mat.m; ++j) {
+      stream >> mat[i][j];
     }
   }
-};
+  return stream;
+}
 
 template <typename T, typename U>
 T fib(U n) {
