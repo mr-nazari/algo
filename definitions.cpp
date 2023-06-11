@@ -14,3 +14,5 @@ template <typename T> bool ckmin(T& a, const T& b) {
 template <typename T> bool ckmax(T& a, const T& b) {
    return a < b ? a = b, 1 : 0;
 }
+
+mt19937_64 rng((unsigned int) chrono::steady_clock::now().time_since_epoch().count());
