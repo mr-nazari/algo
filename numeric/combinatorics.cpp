@@ -52,17 +52,15 @@ Mint Catalan(int x, int y) {
   return C(x + y, y) - C(x + y, y + 1);
 };
 
-Mint H(int n, int s) {
-  // Number of solutions to linear equation
-  // with unit coefficients $x_1 + x_2 + \dots + x_n = s$
+namespace linear_equation {
+
+Mint Normal(int n, int s) {
   return C(n + s - 1, s);
 }
 
-Mint H(int n, int s, int b, int r = 0) {
-  // Number of solutions to bounded linear equation
-  // with fixed limit (unit coefficients)
-  // $x_1 + x_2 + \dots + x_n = s \forall 1 \le i\ len : r \le x_i \le b$
-  s -= n * r;
+Mint Bounded(int n, int s,
+             int max_lim, int min_lim = 0) {
+  s -= n * min_lim;
   if (n < 0 || s < 0) {
     return Mint(0);
   }
@@ -71,7 +69,29 @@ Mint H(int n, int s, int b, int r = 0) {
   }
   Mint res = 0;
   for (int i = 0; i <= n; ++i) {
-    res += (i & 1 ? -1 : 1) * C(n, i) * C((s - i * b) + (n - 1), n - 1);
+    res += (i & 1 ? -1 : 1) * C(n, i) * C((s - i * max_lim) + (n - 1), n - 1);
   }
   return res;
 }
+
+map<int, Mint> _with_gcd1;
+
+Mint WithGcd1(int r) {
+  if (_with_gcd1.count(r)) {
+    return _with_gcd1[r];
+  }
+  Mint res = Mint(2) ^ (r - 1);
+  for (int d = 1; d * d <= r; ++d) {
+    if (r % d == 0) {
+      if (d > 1) {
+        res -= WithGcd1(r / d);
+      }
+      if (r / d > 1 && d * d != r) {
+        res -= WithGcd1(d);
+      }
+    }
+  }
+  return _with_gcd1[r] = res;
+}
+
+}  // linear_equation
