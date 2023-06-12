@@ -1,8 +1,6 @@
 template <typename T>
-struct Matrix {
-  vector<vector<T>> data;
-  int n, m;
-
+class Matrix {
+ public:
   Matrix() {}
   Matrix(int _n, int _m) : n(_n), m(_m) {
     data = vector(n, vector<T>(m));
@@ -16,13 +14,13 @@ struct Matrix {
     if (n != other.n || m != other.m) {
       return Matrix();
     }
-    vector<vector<T>> ret(n, vector<T>(m));
+    Matrix<T> res(n, m);
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < m; ++j) {
-        ret[i][j] = data[i][j] + other.data[i][j];
+        res[i][j] = data[i][j] + other[i][j];
       }
     }
-    return Matrix(ret);
+    return res;
   }
   Matrix operator+=(const Matrix& other) {
     *this = *this + other;
@@ -32,13 +30,13 @@ struct Matrix {
     if (n != other.n || m != other.m) {
       return Matrix();
     }
-    vector<vector<T>> ret(n, vector<T>(m));
+    Matrix<T> res(n, m);
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < m; ++j) {
-        ret[i][j] = data[i][j] - other.data[i][j];
+        res[i][j] = data[i][j] - other[i][j];
       }
     }
-    return Matrix(ret);
+    return res;
   }
   Matrix operator-=(const Matrix& other) {
     *this = *this - other;
@@ -48,15 +46,15 @@ struct Matrix {
     if (m != other.n) {
       return Matrix();
     }
-    vector<vector<T>> ret(n, vector<T>(other.m));
+    Matrix<T> res(n, other.m);
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < other.m; ++j) {
         for (int k = 0; k < m; ++k) {
-          ret[i][j] += data[i][k] * other.data[k][j];
+          res[i][j] += data[i][k] * other[k][j];
         }
       }
     }
-    return Matrix(ret);
+    return res;
   }
   template <typename U>
   Matrix operator^(U p) {
@@ -64,11 +62,11 @@ struct Matrix {
       return Matrix();
     }
     if (p == 0) {
-      vector<vector<T>> identity(n, vector<T>(n));
+      Matrix<T> I(n, n);
       for (int i = 0; i < n; ++i) {
-        identity[i][i] = T(1);
+        I[i][i] = T(1);
       }
-      return Matrix(identity);
+      return I;
     }
     Matrix mat = *this;
     if (p & 1) {
@@ -76,6 +74,10 @@ struct Matrix {
     }
     return (mat * mat) ^ (p / 2);
   }
+
+ private:
+  vector<vector<T>> data;
+  int n, m;
 };
 
 template <typename U, typename T>
