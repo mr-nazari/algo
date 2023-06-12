@@ -69,7 +69,7 @@ Mint Bounded(int n, int s,
   }
   Mint res = 0;
   for (int i = 0; i <= n; ++i) {
-    res += (i & 1 ? -1 : 1) * C(n, i) * C((s - i * max_lim) + (n - 1), n - 1);
+    res += (i & 1 ? -1 : 1) * C(n, i) * Normal(n, s - i * max_lim);
   }
   return res;
 }
