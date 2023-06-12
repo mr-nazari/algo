@@ -52,6 +52,30 @@ Mint Catalan(int x, int y) {
   return C(x + y, y) - C(x + y, y + 1);
 };
 
+Mint LucasC(int n, int k) {
+  if (k < 0 || k > n) {
+    return 0;
+  }
+  vector<int> narr;
+  while (n > 0) {
+    narr.push_back(n % md);
+    n /= md;
+  }
+  vector<int> karr;
+  while (k > 0) {
+    karr.push_back(k % md);
+    k /= md;
+  }
+  auto r = max(narr.size(), karr.size());
+  narr.resize(r);
+  karr.resize(r);
+  Mint res = 1;
+  for (int i = 0; i < r; ++i) {
+    res *= C(narr[i], karr[i]);
+  }
+  return res;
+}
+
 namespace linear_equation {
 
 Mint Normal(int n, int s) {
