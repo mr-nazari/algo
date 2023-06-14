@@ -39,6 +39,7 @@ using hash_map = __gnu_pbds::gp_hash_table<K, V, Hash>;
 template <typename K, typename Hash = splitmix64_hash>
 using hash_set = hash_map<K, __gnu_pbds::null_type, Hash>;
 
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 mt19937_64 rng((unsigned int) chrono::steady_clock::now().time_since_epoch().count());
 
 int rnd(int l, int r) {
