@@ -16,7 +16,7 @@ int Phi(int n) {
 
 vector<int> phi;
 
-void PhiUpToN(int n) {
+void PhiUpTo(int n) {
   phi.resize(n + 1);
   iota(phi.begin(), phi.end(), 0);
   for (int i = 2; i <= n; ++i) {
