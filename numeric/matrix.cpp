@@ -13,7 +13,7 @@ class Matrix {
   }
   Matrix operator+(Matrix& other) {
     if (n != other.n || m != other.m) {
-      throw invalid_argument("Dimensions doesn't match.");
+      throw runtime_error("Dimensions doesn't match.");
     }
     Matrix<T> res(n, m);
     for (int i = 0; i < n; ++i) {
@@ -29,7 +29,7 @@ class Matrix {
   }
   Matrix operator-(Matrix& other) {
     if (n != other.n || m != other.m) {
-      throw invalid_argument("Dimensions doesn't match.");
+      throw runtime_error("Dimensions doesn't match.");
     }
     Matrix<T> res(n, m);
     for (int i = 0; i < n; ++i) {
@@ -45,7 +45,7 @@ class Matrix {
   }
   Matrix operator*(Matrix other) {
     if (m != other.n) {
-      throw invalid_argument("Dimensions doesn't match.");
+      throw runtime_error("Dimensions doesn't match.");
     }
     Matrix<T> res(n, other.m);
     for (int i = 0; i < n; ++i) {
@@ -64,7 +64,7 @@ class Matrix {
   template <typename U>
   Matrix operator^(U p) {
     if (n != m) {
-      throw invalid_argument("Dimensions doesn't match.");
+      throw runtime_error("Matrix is not quadratic.");
     }
     if (p == 0) {
       Matrix<T> I(n, n);
