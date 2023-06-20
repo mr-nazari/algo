@@ -5,14 +5,15 @@ class Matrix {
   Matrix(int _n, int _m) : n(_n), m(_m) {
     data = vector(n, vector<T>(m));
   }
-  Matrix(vector<vector<T>> _data) : n(_data.size()), m(_data[0].size()), data(_data) {}
+  Matrix(vector<vector<T>> _data)
+    : n(_data.size()), m(_data[0].size()), data(_data) {}
 
   vector<T>& operator[](int row) {
     return data[row];
   }
-  Matrix operator+(const Matrix& other) {
+  Matrix operator+(Matrix& other) {
     if (n != other.n || m != other.m) {
-      return Matrix();
+      throw invalid_argument("Dimensions doesn't match.");
     }
     Matrix<T> res(n, m);
     for (int i = 0; i < n; ++i) {
@@ -22,13 +23,13 @@ class Matrix {
     }
     return res;
   }
-  Matrix operator+=(const Matrix& other) {
+  Matrix& operator+=(const Matrix& other) {
     *this = *this + other;
     return *this;
   }
-  Matrix operator-(const Matrix& other) {
+  Matrix operator-(Matrix& other) {
     if (n != other.n || m != other.m) {
-      return Matrix();
+      throw invalid_argument("Dimensions doesn't match.");
     }
     Matrix<T> res(n, m);
     for (int i = 0; i < n; ++i) {
@@ -38,13 +39,13 @@ class Matrix {
     }
     return res;
   }
-  Matrix operator-=(const Matrix& other) {
+  Matrix& operator-=(const Matrix& other) {
     *this = *this - other;
     return *this;
   }
-  Matrix operator*(const Matrix& other) {
+  Matrix operator*(Matrix other) {
     if (m != other.n) {
-      return Matrix();
+      throw invalid_argument("Dimensions doesn't match.");
     }
     Matrix<T> res(n, other.m);
     for (int i = 0; i < n; ++i) {
@@ -56,24 +57,35 @@ class Matrix {
     }
     return res;
   }
+  Matrix& operator*=(const Matrix& other) {
+    *this = *this * other;
+    return *this;
+  }
   template <typename U>
   Matrix operator^(U p) {
     if (n != m) {
-      return Matrix();
+      throw invalid_argument("Dimensions doesn't match.");
     }
     if (p == 0) {
       Matrix<T> I(n, n);
       for (int i = 0; i < n; ++i) {
-        I[i][i] = T(1);
+        I[i][i] = (T) 1;
       }
       return I;
     }
     Matrix mat = *this;
+    Matrix res = (mat * mat) ^ (p / 2);
     if (p & 1) {
-      return mat * ((mat * mat) ^ (p / 2));
+      res *= mat;
     }
-    return (mat * mat) ^ (p / 2);
+    return res;
   }
+
+  template <typename V, typename U>
+  friend V& operator<<(V& stream, Matrix<U> mat);
+
+  template <typename V, typename U>
+  friend V& operator>>(V& stream, Matrix<U>& mat);
 
  private:
   vector<vector<T>> data;
@@ -81,7 +93,7 @@ class Matrix {
 };
 
 template <typename U, typename T>
-U& operator<<(U& stream, Matrix<T>& mat) {
+U& operator<<(U& stream, Matrix<T> mat) {
   for (int i = 0; i < mat.n; ++i) {
     for (int j = 0; j < mat.m; ++j) {
       stream << mat[i][j] << " ";
