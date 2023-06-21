@@ -159,8 +159,10 @@ template <typename U, typename T = U>
 T fib(U nth) {
   vector<T> bases{0, 1};
   vector<T> coeff{1, 1};
-  return CalculateLinearRecurrence(bases, coeff,
-                                   nth).front();
+  return CalculateLinearRecurrence(
+           bases, coeff,
+           nth
+         ).front();
 }
 
 template <typename T, typename U>
