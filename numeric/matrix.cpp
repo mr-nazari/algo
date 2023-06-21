@@ -7,6 +7,12 @@ class Matrix {
   }
   Matrix(vector<vector<T>> _data)
     : n(_data.size()), m(_data[0].size()), data(_data) {}
+  Matrix(vector<T> vec) : n(vec.size()), m(1) {
+    data = vector(n, vector<T>(1));
+    for (int i = 0; i < n; ++i) {
+      data[i][0] = vec[i];
+    }
+  }
 
   vector<T>& operator[](int row) {
     return data[row];
@@ -81,6 +87,9 @@ class Matrix {
     return res;
   }
 
+  template <typename V>
+  friend vector<V> to_vector(Matrix<V> mat);
+
   template <typename V, typename U>
   friend V& operator<<(V& stream, Matrix<U> mat);
 
@@ -91,6 +100,18 @@ class Matrix {
   vector<vector<T>> data;
   int n, m;
 };
+
+template <typename T>
+vector<T> to_vector(Matrix<T> mat) {
+  if (mat.m > 1) {
+    throw runtime_error("The input matrix isn't a vector.");
+  }
+  vector<T> res(mat.n);
+  for (int i = 0; i < (int) res.size(); ++i) {
+    res[i] = mat[i][0];
+  }
+  return res;
+}
 
 template <typename U, typename T>
 U& operator<<(U& stream, Matrix<T> mat) {
@@ -114,6 +135,24 @@ U& operator>>(U& stream, Matrix<T>& mat) {
     }
   }
   return stream;
+}
+
+template <typename T, typename U>
+vector<T> CalculateLinearRecurrence(const vector<T>& bases,
+                                    const vector<T>& coeff,
+                                    U kth) {
+  const int n = (int) bases.size();
+  Matrix<T> X(n, n);
+  for (int i = 0; i < n - 1; ++i) {
+    X[i][i + 1] = 1;
+  }
+  for (int i = 0; i < n; ++i) {
+    X[n - 1][i] = coeff[n - i - 1];
+  }
+  vector<T> res = to_vector(
+    (X ^ kth) * Matrix(bases)
+  );
+  return res;
 }
 
 template <typename T, typename U>
