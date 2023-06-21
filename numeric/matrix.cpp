@@ -8,7 +8,7 @@ class Matrix {
   Matrix(vector<vector<T>> _data)
     : n(_data.size()), m(_data[0].size()), data(_data) {}
   Matrix(vector<T> vec) : n(vec.size()), m(1) {
-    data = vector(n, vector<T>(1));
+    data = vector(n, vector<T>(m));
     for (int i = 0; i < n; ++i) {
       data[i][0] = vec[i];
     }
