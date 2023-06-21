@@ -150,21 +150,21 @@ vector<T> CalculateLinearRecurrence(const vector<T>& bases,
     X[n - 1][i] = coeff[n - i - 1];
   }
   vector<T> res = to_vector(
-    (X ^ kth) * Matrix(bases)
-  );
+                    (X ^ kth) * Matrix(bases)
+                  );
   return res;
 }
 
-template <typename T, typename U>
-T fib(U n) {
-  Matrix<T> base({
-    {T(1), T(1)},
-    {T(1), T(0)}
-  });
-  return (base ^ n)[0][1];
+template <typename U, typename T = U>
+T fib(U nth) {
+  vector<T> bases{0, 1};
+  vector<T> coeff{1, 1};
+  return CalculateLinearRecurrence(bases, coeff,
+                                   nth).front();
 }
+
 template <typename T, typename U>
-pair<T, T> Fib(U n) {
+pair<T, T> rec_fib(U n) {
   if (n == 0) {
     return pair(0, 1);
   }
