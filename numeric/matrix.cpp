@@ -177,3 +177,59 @@ pair<T, T> rec_fib(U n) {
   }
   return pair(c, d);
 }
+
+template <int N, int M>
+struct BinaryMatrix {
+ public:
+  bitset<N>& operator[](int row) {
+    return data[row];
+  }
+  template <int K>
+  BinaryMatrix<N, K> operator*(BinaryMatrix<M, K>& other) {
+    BinaryMatrix<K, M> other_t;
+    for (int i = 0; i < M; ++i) {
+      for (int j = 0; j < K; ++j) {
+        other_t[i][j] = other[j][i];
+      }
+    }
+    BinaryMatrix<N, K> res;
+    for (int i = 0; i < N; ++i) {
+      for (int j = 0; j < K; ++j) {
+        res[i][j] = (data[i] & other_t[j]).any();
+      }
+    }
+    return res;
+  }
+  template <typename U>
+  BinaryMatrix operator^(U p) {
+    if (N != M) {
+      throw runtime_error("Matrix is not quadratic.");
+    }
+    BinaryMatrix<N, N> res;
+    for (int i = 0; i < N; ++i) {
+      res[i][i] = 1;
+    }
+    BinaryMatrix<N, N> base = *this;
+    while (p > 0) {
+      if (p & 1) {
+        res = res * base;
+      }
+      base = base * base;
+      p >>= 1;
+    }
+    return res;
+  }
+  bitset<N> operator*(const bitset<N>& other) {
+    bitset<N> res;
+    for (int i = 0; i < N; ++i) {
+      res[i] = (data[i] & other).any();
+    }
+    return res;
+  }
+ 
+ private:
+  array<bitset<M>, N> data;
+};
+ 
+constexpr int N = 150;
+using BMatrix = BinaryMatrix<N, N>;
