@@ -1,24 +1,22 @@
 template <class Info>
-struct SegmentTree {
-  std::vector<Info> info;
-  int n;
-
+class SegmentTree {
+ public:
   SegmentTree() : n(0) {}
   SegmentTree(int n_, Info v_ = Info()) {
     init(n_, v_);
   }
-  template <class T>
-  SegmentTree(std::vector<T> init_) {
+  SegmentTree(std::vector<Info> init_) {
     init(init_);
   }
+
   void init(int n_, Info v_ = Info()) {
     init(std::vector(n_, v_));
   }
-  template <class T>
-  void init(std::vector<T> init_) {
-    n = init_.size();
+  void init(std::vector<Info> init_) {
+    n = (int) init_.size();
     info.assign(4 << std::__lg(n), Info());
-    std::function<void(int, int, int)> build = [&](int p, int l, int r) {
+    std::function<void(int, int, int)> build;
+    build = [&](int p, int l, int r) {
       if (r - l == 1) {
         info[p] = init_[l];
         return;
@@ -46,62 +44,77 @@ struct SegmentTree {
     }
     pull(p);
   }
-  void modify(int p, const Info &v) {
-    modify(1, 0, n, p, v);
+  void modify(int x, const Info& v) {
+    modify(1, 0, n, x, v);
   }
 
-  Info range_query(int p, int l, int r, int x, int y) {
-    if (l >= y || r <= x) {
+  Info RangeQuery(int p, int l, int r, int lx, int rx) {
+    if (l >= rx || r <= lx) {
       return Info();
     }
-    if (l >= x && r <= y) {
+    if (l >= lx && r <= rx) {
       return info[p];
     }
     int m = (l + r) / 2;
-    return range_query(2 * p, l, m, x, y) + range_query(2 * p + 1, m, r, x, y);
+    return RangeQuery(2 * p, l, m, lx, rx) +
+           RangeQuery(2 * p + 1, m, r, lx, rx);
   }
-  Info range_query(int l, int r) {
-    return range_query(1, 0, n, l, r);
+  Info RangeQuery(int lx, int rx) {
+    return RangeQuery(1, 0, n, lx, rx);
   }
-  template <class F>
-  int find_first(int p, int l, int r, int x, int y, F pred) {
-    if (l >= y || r <= x || !pred(info[p])) {
+  template <class F = std::function<bool(const Info&)>>
+  int FindFirst(int p, int l, int r, int lx, int rx,
+                F pred) {
+    if (l >= rx || r <= lx || !pred(info[p])) {
       return -1;
     }
     if (r - l == 1) {
       return l;
     }
     int m = (l + r) / 2;
-    int res = find_first(2 * p, l, m, x, y, pred);
+    int res = FindFirst(2 * p, l, m, lx, rx, pred);
     if (res == -1) {
-      res = find_first(2 * p + 1, m, r, x, y, pred);
+      res = FindFirst(2 * p + 1, m, r, lx, rx, pred);
     }
     return res;
   }
-  template <class F>
-  int find_first(int l, int r, F pred) {
-    return find_first(1, 0, n, l, r, pred);
+  template <class F = std::function<bool(const Info&)>>
+  int FindFirst(int lx, int rx, F pred) {
+    return FindFirst(1, 0, n, lx, rx, pred);
   }
-  template <class F>
-  int find_last(int p, int l, int r, int x, int y, F pred) {
-    if (l >= y || r <= x || !pred(info[p])) {
+  template <class F = std::function<bool(const Info&)>>
+  int FindLast(int p, int l, int r, int lx, int rx,
+               F pred) {
+    if (l >= rx || r <= lx || !pred(info[p])) {
       return -1;
     }
     if (r - l == 1) {
       return l;
     }
     int m = (l + r) / 2;
-    int res = find_last(2 * p + 1, m, r, x, y, pred);
+    int res = FindLast(2 * p + 1, m, r, lx, rx, pred);
     if (res == -1) {
-      res = find_last(2 * p, l, m, x, y, pred);
+      res = FindLast(2 * p, l, m, lx, rx, pred);
     }
     return res;
   }
-  template <class F>
-  int find_last(int l, int r, F pred) {
-    return find_last(1, 0, n, l, r, pred);
+  template <class F = std::function<bool(const Info&)>>
+  int FindLast(int lx, int rx, F pred) {
+    return FindLast(1, 0, n, lx, rx, pred);
   }
+
+ private:
+  std::vector<Info> info;
+  int n;
 };
+
+struct Info {
+  int sum = 0;
+};
+
+Info operator+(const Info& a, const Info& b) {
+  return {a.sum + b.sum};
+}
 
 template<class Info, class Tag>
 struct LazySegmentTree {
