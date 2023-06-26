@@ -108,12 +108,24 @@ class SegmentTree {
   int n;
 };
 
+template <typename T = i64>
 struct Info {
-  int sum = 0;
+  T sum = 0;
 };
 
-Info operator+(const Info& a, const Info& b) {
+template <typename T>
+Info<T> operator+(const Info<T>& a, const Info<T>& b) {
   return {a.sum + b.sum};
+}
+
+template <typename U, typename T>
+U& operator<<(U& stream, const Info<T>& v) {
+  return stream << v.sum;
+}
+
+template <typename U, typename T>
+U& operator>>(U& stream, Info<T>& v) {
+  return stream >> v.sum;
 }
 
 template<class Info, class Tag>
