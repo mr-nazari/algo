@@ -1,14 +1,15 @@
-template <class Info>
-class SegmentTree {
+template <class Info, class Tag>
+class LazySegmentTree {
  public:
   std::vector<Info> info;
+  std::vector<Tag> tag;
   int n;
 
-  SegmentTree() : n(0) {}
-  SegmentTree(int n_, Info v_ = Info()) {
+  LazySegmentTree() : n(0) {}
+  LazySegmentTree(int n_, Info v_ = Info()) {
     init(n_, v_);
   }
-  SegmentTree(std::vector<Info> init_) {
+  LazySegmentTree(std::vector<Info> init_) {
     init(init_);
   }
 
@@ -18,6 +19,7 @@ class SegmentTree {
   void init(std::vector<Info> init_) {
     n = (int) init_.size();
     info.assign(4 << std::__lg(n), Info());
+    tag.assign(4 << std::__lg(n), Tag());
     std::function<void(int, int, int)> build;
     build = [&](int p, int l, int r) {
       if (r - l == 1) {
@@ -34,12 +36,22 @@ class SegmentTree {
   void pull(int p) {
     info[p] = info[2 * p] + info[2 * p + 1];
   }
+  void apply(int p, const Tag& v) {
+    info[p].apply(v);
+    tag[p].apply(v);
+  }
+  void push(int p) {
+    apply(2 * p, tag[p]);
+    apply(2 * p + 1, tag[p]);
+    tag[p] = Tag();
+  }
   void modify(int p, int l, int r, int x, const Info& v) {
     if (r - l == 1) {
       info[p] = v;
       return;
     }
     int m = (l + r) / 2;
+    push(p);
     if (x < m) {
       modify(2 * p, l, m, x, v);
     } else {
@@ -47,8 +59,8 @@ class SegmentTree {
     }
     pull(p);
   }
-  void modify(int x, const Info& v) {
-    modify(1, 0, n, x, v);
+  void modify(int p, const Info& v) {
+    modify(1, 0, n, p, v);
   }
 
   Info RangeQuery(int p, int l, int r, int lx, int rx) {
@@ -59,11 +71,30 @@ class SegmentTree {
       return info[p];
     }
     int m = (l + r) / 2;
+    push(p);
     return RangeQuery(2 * p, l, m, lx, rx) +
            RangeQuery(2 * p + 1, m, r, lx, rx);
   }
   Info RangeQuery(int lx, int rx) {
     return RangeQuery(1, 0, n, lx, rx);
+  }
+  void RangeApply(int p, int l, int r, int lx, int rx,
+                  const Tag& v) {
+    if (l >= rx || r <= lx) {
+      return;
+    }
+    if (l >= lx && r <= rx) {
+      apply(p, v);
+      return;
+    }
+    int m = (l + r) / 2;
+    push(p);
+    RangeApply(2 * p, l, m, lx, rx, v);
+    RangeApply(2 * p + 1, m, r, lx, rx, v);
+    pull(p);
+  }
+  void RangeApply(int lx, int rx, const Tag& v) {
+    RangeApply(1, 0, n, lx, rx, v);
   }
   template <class F = std::function<bool(const Info&)>>
   int FindFirst(int p, int l, int r, int lx, int rx,
@@ -75,6 +106,7 @@ class SegmentTree {
       return l;
     }
     int m = (l + r) / 2;
+    push(p);
     int res = FindFirst(2 * p, l, m, lx, rx, pred);
     if (res == -1) {
       res = FindFirst(2 * p + 1, m, r, lx, rx, pred);
@@ -95,9 +127,10 @@ class SegmentTree {
       return l;
     }
     int m = (l + r) / 2;
+    push(p);
     int res = FindLast(2 * p + 1, m, r, lx, rx, pred);
     if (res == -1) {
-      res = FindLast(2 * p, l, m, lx, rx, pred);
+      res = FindFirst(2 * p, l, m, lx, rx, pred);
     }
     return res;
   }
@@ -107,20 +140,26 @@ class SegmentTree {
   }
 };
 
-struct Info {
-  int sum = 0;
+struct Tag {  // For range apply
+              // e.x Add v to every element in [l, r)
+  i64 add = 0;
+
+  void apply(Tag t) {
+    add += t.add;
+  }
 };
 
-Info operator+(const Info& a, const Info& b) {
-  return {a.sum + b.sum};
-}
+const i64 kInf = numeric_limits<i64>::max();
 
-template <typename U>
-U& operator<<(U& stream, const Info& v) {
-  return stream << v.sum;
-}
+struct Info {  // For range query
+               // e.x Get minimum of elements in [l, r)
+  i64 mn = kInf;
 
-template <typename U>
-U& operator>>(U& stream, Info& v) {
-  return stream >> v.sum;
+  void apply(Tag t) {
+    mn += t.add;
+  }
+};
+
+Info operator+(Info a, Info b) {
+  return {std::min(a.mn, b.mn)};
 }
