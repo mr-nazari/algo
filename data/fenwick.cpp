@@ -1,8 +1,6 @@
 template <typename T>
-struct Fenwick {
-  int n;
-  std::vector<T> a;
-
+class Fenwick {
+ public:
   Fenwick(int n = 0) {
     init(n);
   }
@@ -37,4 +35,8 @@ struct Fenwick {
     }
     return x;
   }
+
+ private:
+  std::vector<T> a;
+  int n;
 };
