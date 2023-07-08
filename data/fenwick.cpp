@@ -16,11 +16,11 @@ class Fenwick {
   }
 
   T Sum(int x) {
-    auto ans = T();
+    auto res = T();
     for (int i = x; i > 0; i -= i & -i) {
-      ans += a[i - 1];
+      res += a[i - 1];
     }
-    return ans;
+    return res;
   }
   T RangeSum(int l, int r) {
     return Sum(r) - Sum(l);
