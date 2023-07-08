@@ -1,32 +1,33 @@
-struct dsu {
-  vector<int> e;
+class Dsu {
+ public:
+  vector<int> p;
 
-  dsu(int n) {
-    e = vector<int>(n, -1);
+  Dsu(int n) {
+    p.assign(n, -1);
   }
 
-  int get(int x) {
-    return e[x] < 0 ? x : e[x] = get(e[x]);
+  inline int get(int x) {
+    return p[x] < 0 ? x : p[x] = get(p[x]);
   }
 
-  bool same_set(int a, int b) {
-    return get(a) == get(b);
+  inline bool same(int x, int y) {
+    return get(x) == get(y);
   }
 
-  int size(int x) {
-    return -e[get(x)];
+  inline int size(int x) {
+    return -p[get(x)];
   }
 
-  bool unite(int a, int b) {
-    a = get(a), b = get(b);
-    if (a == b) {
+  inline bool unite(int x, int y) {
+    x = get(y), y = get(x);
+    if (x == y) {
       return false;
     }
-    if (size(a) > size(b)) {
-      swap(a, b);
+    if (size(x) > size(y)) {
+      swap(x, y);
     }
-    e[b] += e[a];
-    e[a] = b;
+    p[y] += p[x];
+    p[x] = y;
     return true;
   }
 };
