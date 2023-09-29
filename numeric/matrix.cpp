@@ -55,8 +55,8 @@ class Matrix {
     }
     Matrix<T> res(n, other.m);
     for (int i = 0; i < n; ++i) {
-      for (int j = 0; j < other.m; ++j) {
-        for (int k = 0; k < m; ++k) {
+      for (int k = 0; k < m; ++k) {
+        for (int j = 0; j < other.m; ++j) {
           res[i][j] += data[i][k] * other[k][j];
         }
       }
@@ -72,17 +72,17 @@ class Matrix {
     if (n != m) {
       throw runtime_error("Matrix is not quadratic.");
     }
-    if (p == 0) {
-      Matrix<T> I(n, n);
-      for (int i = 0; i < n; ++i) {
-        I[i][i] = (T) 1;
-      }
-      return I;
+    Matrix<T> res(n, n);
+    for (int i = 0; i < n; ++i) {
+      res[i][i] = (T) 1;
     }
-    Matrix mat = *this;
-    Matrix res = (mat * mat) ^ (p / 2);
-    if (p & 1) {
-      res *= mat;
+    Matrix<T> mat = *this;
+    while (p > 0) {
+      if (p & 1) {
+        res *= mat;
+      }
+      mat *= mat;
+      p >>= 1;
     }
     return res;
   }
